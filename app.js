@@ -1,7 +1,6 @@
+
 var  Koa = require('koa')
-
-var sha1 = require('sha1')
-
+var  wechat = require('./wechat/g')
 var config = {
   wechat:{
     appID : 'wx3df629936bf31f75',
@@ -12,23 +11,7 @@ var config = {
 
 var app = new Koa()
 
-app.use(function *(next) {
-  console.log('.',this.query)
-  let token = config.token
-  let signature = this.query.signature
-  let nonce = this.query.nonce
-  let timestamp = this.query.timestamp
-  let ecostr = this.query.ecostr
-
-  var str = [token,timestamp,nonce].sort().join('')
-  var sha = sha1(str)
-
-  if(sha === signature){
-    this.body = ecostr
-  }else{
-    this.body = 'wrong---'
-  }
-})
+app.use(wechat(config.wechat))
 
   app.listen(8001)
   console.log('跑起来了')

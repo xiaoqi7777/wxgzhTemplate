@@ -16,11 +16,17 @@
   
 
 
-  2、app.use(function *(next) {
+  1、app.use(function *(next) {
     console.log(this.query)
   })
   this.query 获取url？后面的参数
   例子:http://localhost:1234/?sg=123&&name=31
   打印{ sg: '123', name: '31' }
   
+
+  2、koa.use() 
+    koa对中间键的要求是一个Generator函数
+  
+  3、module.exports = function(){}
+    别的文件直接引用这个module.exports文件 就代表他后面等号的内容
  */
