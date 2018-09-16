@@ -16,6 +16,11 @@
     注意:每2个小时自动失效,需要重新获取   
          一旦更新了,之前的就不能用了
     存放票据:若没有数据库,可以用文件读写完成
+    调取access_token 获取的接口,返回的是
+    {
+      access_token: '获取的access_token字符串'
+      expires_in: 7200 //过期时间
+    }
 
   
 
@@ -33,4 +38,17 @@
   
   3、module.exports = function(){}
     别的文件直接引用这个module.exports文件 就代表他后面等号的内容
+
+  4、request发起请求
+    let promise = require('bluebird')
+    let request = promise.promisify(require('request'))
+    用法,把request封装成promise   传入穿去{url:地址,json:true}}json获取时候的格式，也是默认的
+    获取的数据:response.body
+    request({url:url,json:true}).then(function(response){
+        //获取 access_token 和 expires_in
+      var data = response.body
+     })
+
+
+
  */

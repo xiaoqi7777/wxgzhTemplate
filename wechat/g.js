@@ -43,6 +43,14 @@ function Wechat(opts){
       }
       catch(e){
         // 如果异常,则更新 获取票据
+        // 第一次获取和需要更新会走这里
+        // 返回的一个封装好的promise 里面是一个对象
+        /* 
+        {
+          access_token: '获取的access_token字符串'
+          expires_in: 7200 //处理之后的时间(获取的7200+加上获取时候的时间秒数)
+        }
+        */
         return that.updateAccessToken()
       }
       //判断是否合法
@@ -60,7 +68,33 @@ function Wechat(opts){
       that.saveAccessToken(data)
     })
 }
+//增加 自定义菜单
+Wechat.prototype.addMenu = function(menu){
+  var that = this
+  
+  return new Promise((resolve,rej)=>{
+    that.getAccessToken()
+        .then((data)=>{
+          console.log('成功',data)
+          var  url = api.menu.url + 'access_token=' + data.access_token 
+            
+          request({method: 'POST', url: url,body: menu, json: true}).then((response)=>{
+            console.log('自定一菜单-----',response.body)
+            var _data = response.body
+              if(_data){
+                  resolve(_data)
+              }else{
+                  throw new Error('addMenu fails')
+              }                    
+            })
+            .catch(function(err){
+                rej(err)
+            })
+        })
+      })
 
+}
+//获取 AccessToken
 Wechat.prototype.updateAccessToken = function(){
   var appID = this.appID
   var appSecret = this.appSecret
@@ -100,6 +134,60 @@ Wechat.prototype.isValidAccessToken = function(data){
 
 module.exports = function(config){
   var wechat = new Wechat(config)
+  let menu =   {
+    "button":[
+    {    
+         "type":"click",
+         "name":"今日歌曲",
+         "key":"V1001_TODAY_MUSIC"
+     },
+     {
+      "name": "发图", 
+      "sub_button": [
+          {
+              "type": "pic_sysphoto", 
+              "name": "系统拍照发图", 
+              "key": "rselfmenu_1_0", 
+             "sub_button": [ ]
+           }, 
+          {
+              "type": "pic_photo_or_album", 
+              "name": "拍照或者相册发图", 
+              "key": "rselfmenu_1_1", 
+              "sub_button": [ ]
+          }, 
+          {
+              "type": "pic_weixin", 
+              "name": "微信相册发图", 
+              "key": "rselfmenu_1_2", 
+              "sub_button": [ ]
+          }
+      ]
+  },
+     {
+          "name":"菜单",
+          "sub_button":[
+          {    
+              "type":"view",
+              "name":"搜索",
+              "url":"http://www.soso.com/"
+           },
+           {
+              "type":"click",
+              "name":"赞一下我们",
+              "key":"V1001_GOOD"
+           },
+           {
+            "name": "发送位置", 
+            "type": "location_select", 
+            "key": "rselfmenu_2_0"
+        }]
+      }]
+  }
+  wechat.addMenu(menu).then((data)=>{
+      console.log('自定义菜单返回的数据2',data)
+    })
+  
   return function *(next) {
     console.log('.',this.query)
     let token = config.token
@@ -117,5 +205,4 @@ module.exports = function(config){
       this.body = 'wrong---'
     }
   }
-  yield next
 }
