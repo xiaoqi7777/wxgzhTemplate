@@ -5,7 +5,10 @@ exports.readFileAsync = function(fpath,encodnig){
   return new Promise((resolve,reject)=>{
       fs.readFile(fpath,encodnig,function(err,content){
         if(err) reject(err)
-        else resolve(content)
+        else{
+          content = JSON.parse(content)
+          resolve(content)
+        } 
       })
   })
 }
