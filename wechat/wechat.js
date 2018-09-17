@@ -24,7 +24,7 @@ var  api = {
     url:prefix + 'menu/create?'
   }
 }
-function Wechat(opts){
+async function Wechat(opts){
   var that = this
   this.appID = opts.appID
   this.appSecret = opts.appSecret
@@ -32,7 +32,7 @@ function Wechat(opts){
   // 获取 存储票据都是异步的 返回一个Promise
   this.getAccessToken = opts.getAccessToken
   this.saveAccessToken = opts.saveAccessToken
-
+  await this.updateAccessToken()
   this.getAccessToken()
   .then( (data)=> {
       //获取票据
@@ -74,7 +74,8 @@ Wechat.prototype.addMenu = function(menu){
     that.getAccessToken()
         .then((data)=>{
           //data获取到的是流，先转换成字符串 在转换成JSON对象
-          // data = data.toString()
+          data = data.toString()
+          data = JSON.parse(data)
           console.log('成功',data)
           var  url = api.menu.url + 'access_token=' + data.access_token 
             
