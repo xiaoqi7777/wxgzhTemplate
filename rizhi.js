@@ -51,6 +51,12 @@
       var data = response.body
      })
 
+  5、exports.reply = function(){
+      }
+     exports.reply1 = function(){
+      }
+    文件抛出方法  require文件  .方法即可
+    
 
 
  */

@@ -1,5 +1,5 @@
 let Wechat = require('../wechat/wechat')
-var config = require('./config')
+var config = require('../config')
 
 let wechatApi = new Wechat(config.wechat)
 let menu =   {
@@ -57,5 +57,5 @@ wechatApi.addMenu(menu).then((data)=>{
   })
 
 exports.reply = function(){
-  
+
 }
