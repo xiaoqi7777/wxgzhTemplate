@@ -1,7 +1,7 @@
 let Wechat = require('../wechat/wechat')
 var config = require('../config')
 
-let wechatApi = new Wechat()
+let wechatApi = new Wechat(config.wechat)
 let menu =   {
   "button":[
   {    
