@@ -32,7 +32,13 @@ async function Wechat(opts){
   // 获取 存储票据都是异步的 返回一个Promise
   this.getAccessToken = opts.getAccessToken
   this.saveAccessToken = opts.saveAccessToken
-  await this.updateAccessToken()
+  this.fetchAccessToken()
+  
+}
+Wechat.prototype.fetchAccessToken = function(){
+  let that = this
+  return new Promise((resolve,reject)=>{
+
   this.getAccessToken()
   .then( (data)=> {
       //获取票据
@@ -63,15 +69,17 @@ async function Wechat(opts){
     .then((data)=>{
       that.access_token = data.access_token
       that.expires_in = data.expires_in
-      that.saveAccessToken(data)
-    })
+      resolve(that.saveAccessToken(data))  
+    }) 
+  })  
+
 }
 //增加 自定义菜单
 Wechat.prototype.addMenu = function(menu){
   var that = this
   
   return new Promise((resolve,rej)=>{
-    that.getAccessToken()
+    that.fetchAccessToken()
         .then((data)=>{
           //data获取到的是流，先转换成字符串 在转换成JSON对象
           data = data.toString()
