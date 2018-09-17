@@ -32,11 +32,6 @@ function Wechat(opts){
   // 获取 存储票据都是异步的 返回一个Promise
   this.getAccessToken = opts.getAccessToken
   this.saveAccessToken = opts.saveAccessToken
-  this.fetchAccessToken()
-  
-}
-Wechat.prototype.fetchAccessToken = function(){
-  var that = this
 
   this.getAccessToken()
   .then( (data)=> {
@@ -76,7 +71,7 @@ Wechat.prototype.addMenu = function(menu){
   var that = this
   
   return new Promise((resolve,rej)=>{
-    that.fetchAccessToken()
+    that.getAccessToken()
         .then((data)=>{
           //data获取到的是流
           // data = data.toString()
