@@ -1,13 +1,14 @@
 
 var sha1 = require('sha1')
 var Wechat = require('./wechat')
-
+var getRweBody = require('raw-body')
 
 
 module.exports = function(config){
   var wechat = new Wechat(config)
   
   return function *(next) {
+    let that = this
     console.log('.',this.query)
     let token = config.token
     let signature = this.query.signature
@@ -27,8 +28,12 @@ module.exports = function(config){
       if(sha !== signature){
         this.body = 'wrong---'
       }else{
-          console.log('post------jinlail')
-          // var data = yield
+        var data = yield getRweBody(that.req,{
+          length : that.length,
+          limit : '1mb',
+          encoding : that.charset
+        })
+        console.log('data',data)
       }
     }
   }
