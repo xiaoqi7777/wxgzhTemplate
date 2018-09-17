@@ -6,7 +6,7 @@ exports.readFileAsync = function(fpath,encodnig){
       fs.readFile(fpath,encodnig,function(err,content){
         if(err) reject(err)
         else{
-          content = JSON.parse(content)
+          // 返回的是 读取的流  需要转换成 字符串 在转换成对象
           resolve(content)
         } 
       })

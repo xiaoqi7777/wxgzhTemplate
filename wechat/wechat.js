@@ -73,7 +73,7 @@ Wechat.prototype.addMenu = function(menu){
   return new Promise((resolve,rej)=>{
     that.getAccessToken()
         .then((data)=>{
-          //data获取到的是流
+          //data获取到的是流，先转换成字符串 在转换成JSON对象
           // data = data.toString()
           console.log('成功',data)
           var  url = api.menu.url + 'access_token=' + data.access_token 

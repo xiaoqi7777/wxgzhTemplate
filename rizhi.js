@@ -21,7 +21,9 @@
       access_token: '获取的access_token字符串'
       expires_in: 7200 //过期时间
     }
-
+  3、获取的  access_token和expires_in 存取
+    保存  将获取的 对象   转换成JSON 字符串
+    取出  将取出的 字符串 转换成JSON 对象
   
 
 
