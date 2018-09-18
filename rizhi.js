@@ -51,12 +51,6 @@
       var data = response.body
      })
 
-<<<<<<< HEAD
-  5、var Wechat = require('./wechat')
-     当一个文件被require进来的时候  就全局的代码就开始跑起来  
-     例如有 console.log('123') 则在引入的时候 会被直接执行
- 
-=======
   5、exports.reply = function(){
       }
      exports.reply1 = function(){
@@ -65,5 +59,4 @@
     
 
 
->>>>>>> accessToken
  */
