@@ -31,6 +31,11 @@ function Wechat(opts) {
   this.getAccessToken = opts.getAccessToken
   this.saveAccessToken = opts.saveAccessToken
   this.fetchAccessToken()
+          //fetchAccessToken()返回的是一个Promise对象
+          //data获取到的是流，先转换成字符串 在转换成JSON对象 
+          //data = data.toString()
+          //data = JSON.parse(data)
+          //console.log('成功', data)
 }
 Wechat.prototype.fetchAccessToken = function () {
   let that = this

@@ -19,10 +19,16 @@ module.exports = function(config){
     var str = [token,timestamp,nonce].sort().join('')
     var sha = sha1(str)
   if(this.method === 'GET'){
+    
+    
       if(sha === signature){
         this.body = echostr
       }else{
-        this.body = 'wrong---'
+        if(this.url.indexOf('MP')){
+          this.body = 'DG9ftuBEo1b7YsjS'
+        }else{
+          this.body = 'wrong---'
+        }
       }
     }else if(this.method === 'POST'){
       if(sha !== signature){
