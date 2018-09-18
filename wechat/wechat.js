@@ -22,12 +22,7 @@ var api = {
     url: prefix + 'menu/create?'
   }
 }
-<<<<<<< HEAD
-
-function Wechat(opts) {
-=======
 async function Wechat(opts){
->>>>>>> accessToken
   var that = this
   this.appID = opts.appID
   this.appSecret = opts.appSecret
@@ -35,29 +30,9 @@ async function Wechat(opts){
   // 获取 存储票据都是异步的 返回一个Promise
   this.getAccessToken = opts.getAccessToken
   this.saveAccessToken = opts.saveAccessToken
-<<<<<<< HEAD
-  this.fetchAccessToken()
-
-}
-Wechat.prototype.fetchAccessToken = async function () {
-  let that = this
-
-  //判断有的情况，跳过获取
-  if (this.access_token && this.expires_in) {
-    //直接校验是否过期
-    if (this.isValidAccessToken(this)) {
-      return Promise.resolve(this)
-    }
-  }
-
-  //判断没有的情况，获取token
-  await this.getAccessToken()
-    .then((data) => {
-=======
   await this.updateAccessToken()
   this.getAccessToken()
   .then( (data)=> {
->>>>>>> accessToken
       //获取票据
       try {
         // 获取到的是liu 要转换
@@ -91,24 +66,6 @@ Wechat.prototype.fetchAccessToken = async function () {
 //增加 自定义菜单
 Wechat.prototype.addMenu = function (menu) {
   var that = this
-<<<<<<< HEAD
-
-  return new Promise((resolve, rej) => {
-    that.fetchAccessToken()
-      .then((data) => {
-        //data获取到的是流，先转换成字符串 在转换成JSON对象
-        // data = data.toString()
-        console.log('成功', data)
-        var url = api.menu.url + 'access_token=' + data.access_token
-
-        request({
-            method: 'POST',
-            url: url,
-            body: menu,
-            json: true
-          }).then((response) => {
-            console.log('自定一菜单-----', response.body)
-=======
   
   return new Promise((resolve,rej)=>{
     that.getAccessToken()
@@ -121,7 +78,6 @@ Wechat.prototype.addMenu = function (menu) {
             
           request({method: 'POST', url: url,body: menu, json: true}).then((response)=>{
             console.log('自定一菜单-----',response.body)
->>>>>>> accessToken
             var _data = response.body
             if (_data) {
               resolve(_data)

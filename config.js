@@ -1,9 +1,6 @@
-
 var path = require('path')
 var wechat_file = path.join(__dirname,'/config/wechat.txt')
 var util = require('./libs/util')
-
-
 var config = {
   wechat:{
     appID : 'wx3df629936bf31f75',
@@ -18,5 +15,4 @@ var config = {
     }
   }
 }
-
 module.exports = config

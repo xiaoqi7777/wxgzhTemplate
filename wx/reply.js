@@ -56,4 +56,10 @@ wechatApi.addMenu(menu).then((data)=>{
     console.log('自定义菜单返回的数据2',data)
   })
 
+<<<<<<< HEAD
 
+=======
+exports.reply = function(){
+
+}
+>>>>>>> accessToken
