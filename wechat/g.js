@@ -24,9 +24,10 @@ module.exports = function(config){
       if(sha === signature){
         this.body = echostr
       }else{
-        if(this.url.indexOf('MP')){
+        if(this.url.indexOf('MP')>-1){
           this.body = 'DG9ftuBEo1b7YsjS'
-        }else{
+        }
+        else{
           this.body = 'wrong---'
         }
       }
@@ -42,5 +43,6 @@ module.exports = function(config){
         console.log('data',data)
       }
     }
+    yield next
   }
 }
