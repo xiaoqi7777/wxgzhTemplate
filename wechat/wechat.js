@@ -20,6 +20,9 @@ var api = {
   menu: {
     // https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN
     url: prefix + 'menu/create?'
+  },
+  ticket:{
+    get:prefix+'ticket/getticket?'
   }
 }
 function Wechat(opts) {
@@ -30,6 +33,9 @@ function Wechat(opts) {
   // 获取 存储票据都是异步的 返回一个Promise
   this.getAccessToken = opts.getAccessToken
   this.saveAccessToken = opts.saveAccessToken
+
+  this.getTicket = opts.getTicket
+  this.saveTicket = opts.saveTicket
   this.fetchAccessToken()
           //fetchAccessToken()返回的是一个Promise对象
           //data获取到的是流，先转换成字符串 在转换成JSON对象 
@@ -73,6 +79,32 @@ Wechat.prototype.fetchAccessToken = function () {
   })
 
 }
+//获取sdk 票据
+Wechat.prototype.fetchTicket = function (access_token) {
+  let that = this
+  return new Promise((resolve, reject) => {
+    this.getTicket()
+      .then((data) => {
+        //获取票据
+        try {
+          // 获取到的是liu 要转换
+          data = JSON.parse(data)
+        } catch (e) {
+          return that.updateTicket(access_token)
+        }
+        //判断是否合法
+        if (that.isValidTicket(access_token)) {
+          return Promise.resolve(data)
+        } else {
+          return that.updateTicket(access_token)
+        }
+      })
+      .then((data) => {
+        resolve(that.saveTicket(data))
+      })
+  })
+
+}
 //增加 自定义菜单
 Wechat.prototype.addMenu = function (menu) {
   var that = this
@@ -107,6 +139,29 @@ Wechat.prototype.addMenu = function (menu) {
   })
 
 }
+//更新 sdk updateTicket
+Wechat.prototype.updateTicket = function (access_token) {
+
+  var url = api.access.get + '&access_token=' + access_token + '&type=jsapi'
+
+  return new Promise((resolve) => {
+
+    request({
+      url: url,
+      json: true
+    }).then(function (response) {
+      //获取 access_token 和 expires_in
+      var data = response.body
+      //getTime返回的是毫秒数
+      var now = (new Date().getTime())
+      var expires_in = now + (data.expires_in - 20) * 1000
+
+      data.expires_in = expires_in
+
+      resolve(data)
+    })
+  })
+}
 //获取 AccessToken
 Wechat.prototype.updateAccessToken = function () {
   var appID = this.appID
@@ -132,6 +187,20 @@ Wechat.prototype.updateAccessToken = function () {
   })
 }
 
+Wechat.prototype.isValidTicket = function (data) {
+  if (!data || !data.ticket|| !data.expires_in) {
+    return false
+  }
+
+  var ticket = data.ticket
+  var expires_in = data.expires_in
+  var now = (new Date().getTime())
+  if (ticket && now < expires_in) {
+    return true
+  } else {
+    return false
+  }
+}
 Wechat.prototype.isValidAccessToken = function (data) {
   if (!data || !data.access_token || !data.expires_in) {
     return false

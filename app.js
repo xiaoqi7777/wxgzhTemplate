@@ -9,9 +9,22 @@ var cors = require('./router/cors')
 
 var app = new Koa()
 
+
+
+
+// app.use(function *(next){
+//   if(this.url.indexOf('/movie')>-1){
+//     this.body = '<h1>----1---</h1>'
+
+//     return next
+//   }
+//   yield next
+// })
+
+
+
 	//跨域配置
 	app.use(cors)
-
 
 
 app.use(wechat(config.wechat))

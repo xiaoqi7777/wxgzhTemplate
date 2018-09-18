@@ -55,6 +55,15 @@ let menu =   {
 wechatApi.addMenu(menu).then((data)=>{
     console.log('自定义菜单返回的数据2',data)
   })
+wechatApi.fetchAccessToken().then(data=>{
+    data = JSON.parse(data)
+    console.log('huoqu-----',data.access_token)
+    let access_token = data.access_token
+    wechatApi.fetchTicket(access_token).then((data)=>{
+        console.log('临时票价',data)
+      })
+})
+
 
 exports.reply = function(){
 
