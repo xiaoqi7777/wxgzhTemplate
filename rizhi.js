@@ -56,7 +56,12 @@
      exports.reply1 = function(){
       }
     文件抛出方法  require文件  .方法即可
-    
+
+  6、router.get('/',(x,next)=>{
+    console.log('请求过来的路径',x.href)
+    console.log('请求过来的url',x.url)
+    x.body = '路由返回的数据'
+  }
 
 
  */

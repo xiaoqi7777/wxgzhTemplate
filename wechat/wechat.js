@@ -142,7 +142,7 @@ Wechat.prototype.addMenu = function (menu) {
 //更新 sdk updateTicket
 Wechat.prototype.updateTicket = function (access_token) {
 
-  var url = api.access.get + '&access_token=' + access_token + '&type=jsapi'
+  var url = api.ticket.get + '&access_token=' + access_token + '&type=jsapi'
 
   return new Promise((resolve) => {
 
