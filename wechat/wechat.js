@@ -162,7 +162,7 @@ Wechat.prototype.updateTicket = function (access_token) {
     })
   })
 }
-//获取 AccessToken
+//更新 AccessToken
 Wechat.prototype.updateAccessToken = function () {
   var appID = this.appID
   var appSecret = this.appSecret

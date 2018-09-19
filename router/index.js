@@ -13,12 +13,17 @@ router.get('/',async (x,next)=>{
   let ticketData = await wechatApi.fetchTicket(access_token)
   let ticket = JSON.parse(ticketData).ticket
   let url = x.href
-  // console.log('url',url,'ticket',ticket,'access_token',access_token)
+  console.log('url',url,'ticket',ticket)
   var params = sign(ticket,url)
   console.log('params',params)
   x.body = params
 })
-
+router.get('/wx',async(x,next)=>{
+  console.log(x.query,'codezhi-----')
+  x.status = 301;
+  x.redirect('http://tsml520.cn:5000')
+  //x.body = '123'
+})
 
 
 var createNonace = function(){
@@ -32,6 +37,8 @@ function sign(ticket, url){
   var noncestr = createNonace()
   var timestamp = createTimestamp()
   var signature = _sign(noncestr, timestamp, ticket, url)
+  console.log('noncestr',noncestr,'timestamp',timestamp)
+  console.log('signature',signature)
   return{
     noncestr : noncestr,
     timestamp : timestamp,
@@ -41,8 +48,8 @@ function sign(ticket, url){
 function _sign(noncestr, timestamp, ticket, url) {
   var data = [
     'noncestr='+noncestr,
-    'jsapi_ticket='+timestamp,
-    'timestamp='+ticket,
+    'jsapi_ticket='+ticket,
+    'timestamp='+timestamp,
     'url='+url
   ]
   var str = data.sort().join('&')

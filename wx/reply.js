@@ -2,6 +2,15 @@ let Wechat = require('../wechat/wechat')
 var config = require('../config')
 
 let wechatApi = new Wechat(config.wechat)
+
+
+let data={
+    appid:'wx3df629936bf31f75',
+    redirect_uri:encodeURIComponent  ('http://tsml520.cn:5000/#/'),
+    response_type:'code',
+    scope:'snsapi_userinfo',
+    wechat_redirect:'wechat_redirect' 
+}
 let menu =   {
   "button":[
   {    
@@ -38,24 +47,24 @@ let menu =   {
         {    
             "type":"view",
             "name":"搜索",
-            "url":"http://www.soso.com/"
-         },
-         {
-            "type":"click",
-            "name":"赞一下我们",
-            "key":"V1001_GOOD"
-         },
-         {
-          "name": "发送位置", 
-          "type": "location_select", 
-          "key": "rselfmenu_2_0"
-      }]
+            "url":`https://open.weixin.qq.com/connect/oauth2/authorize?appid=${data.appid}&redirect_uri=${data.redirect_uri}&response_type=${data.response_type}&scope=${data.scope}&state=STATE#${data.wechat_redirect}`
+         }
+         ]
     }]
 }
+
 wechatApi.addMenu(menu).then((data)=>{
     console.log('自定义菜单返回的数据2',data)
   })
 
+wechatApi.fetchAccessToken().then(data=>{
+    data = JSON.parse(data)
+    console.log('用来获取 ------ 临时获取的票据',data.access_token)
+    let access_token = data.access_token
+    wechatApi.fetchTicket(access_token).then((data)=>{
+        console.log('临时票价',data)
+      })
+})
 
 exports.reply = function(){
 
