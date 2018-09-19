@@ -9,7 +9,6 @@ module.exports = function(config){
   
   return function *(next) {
     let that = this
-    console.log('.',this.query)
     let token = config.token
     let signature = this.query.signature
     let nonce = this.query.nonce

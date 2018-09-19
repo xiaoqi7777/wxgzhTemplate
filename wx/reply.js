@@ -6,7 +6,7 @@ let wechatApi = new Wechat(config.wechat)
 
 let data={
     appid:'wx3df629936bf31f75',
-    redirect_uri:encodeURIComponent  ('http://tsml520.cn:5000/#/'),
+    redirect_uri:encodeURI('http://tsml520.cn/wx'),
     response_type:'code',
     scope:'snsapi_userinfo',
     wechat_redirect:'wechat_redirect' 
