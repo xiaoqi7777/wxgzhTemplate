@@ -47,7 +47,7 @@ let menu =   {
         {    
             "type":"view",
             "name":"搜索",
-            "url":`https://open.weixin.qq.com/connect/oauth2/authorize?appid=${data.appid}&redirect_uri=${data.redirect_uri}&response_type=${data.response_type}&scope=${data.scope}&state=STATE#${data.wechat_redirect}`
+            "url":`http://tsml520.cn`
          }
          ]
     }]

@@ -5,6 +5,7 @@ var config = require('./config')
 var reply = require('./wx/reply')
 var  router = require('./router/index')
 var cors = require('./router/cors')
+const bodyparser = require('koa-bodyparser')  
 
 
 var app = new Koa()
@@ -31,7 +32,9 @@ app.use(wechat(config.wechat))
 
 app.use(router.routes(),router.allowedMethods())
 
-
+app.use(bodyparser({
+  enableTypes:['json', 'form', 'text']
+}))
 
 
   app.listen(8001)

@@ -19,12 +19,17 @@ router.get('/',async (x,next)=>{
   x.body = params
 })
 router.get('/wx',async(x,next)=>{
-  console.log(x.query,'codezhi-----')
+  console.log(x.query,'获取code值-----')
   x.status = 301;
-  x.redirect('http://tsml520.cn:5000')
+  x.redirect(`http://www.tsml520.cn:5000?code=success-----`)
   //x.body = '123'
 })
 
+router.post('/data',(x,next)=>{
+  console.log(x.request.body)
+
+  x.body = {data:'数据-接收成功'}
+})
 
 var createNonace = function(){
   return Math.random().toString(26).substr(2,15)

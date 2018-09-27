@@ -23,6 +23,9 @@ var api = {
   },
   ticket:{
     get:prefix+'ticket/getticket?'
+  },
+  code:{
+    get:'https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code'
   }
 }
 function Wechat(opts) {

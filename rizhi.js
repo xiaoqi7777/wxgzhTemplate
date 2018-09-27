@@ -22,9 +22,22 @@
       expires_in: 7200 //过期时间
     }
   3、获取的  access_token和expires_in 存取
-    保存  将获取的 对象   转换成JSON 字符串
-    取出  将取出的 字符串 转换成JSON 对象
-  
+     保存  将获取的 对象   转换成JSON 字符串
+     取出  将取出的 字符串 转换成JSON 对象
+  4、sdk 引入  签名算法
+    1 找官方工具核对算法 
+    2 在算法没问题的情况在，注意url  我测试的要带端口  别人都是不带端口过的
+  5、微信授权
+     1、url 要跳转地址要填写后端的
+     2、后端在重定向到前端页面
+     3、获取到的code在x.query里面
+    例子：
+        router.get('/wx',async(x,next)=>{
+          console.log(x.query,'codezhi-----')
+          x.status = 301;
+          x.redirect('http://tsml520.cn:5000')
+        })
+
 
 
   1、app.use(function *(next) {

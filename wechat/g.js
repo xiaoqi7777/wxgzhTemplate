@@ -37,7 +37,7 @@ module.exports = function(config){
           limit : '1mb',
           encoding : that.charset
         })
-        console.log('data',data)
+        console.log('data',data.toString())
       }
     }
     yield next
