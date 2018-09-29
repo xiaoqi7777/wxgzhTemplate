@@ -24,6 +24,8 @@ var app = new Koa()
 
 
 
+
+
 	//跨域配置
 	app.use(cors)
 
