@@ -26,12 +26,13 @@ var app = new Koa()
 
 	//跨域配置
 	app.use(cors)
-app.use(require('koa-static')(__dirname+'/public'))
+
 
 app.use(wechat(config.wechat))
 
 app.use(router.routes(),router.allowedMethods())
 
+app.use(require('koa-static')(__dirname+'/public'))
 app.use(bodyparser({
   enableTypes:['json', 'form', 'text']
 }))
