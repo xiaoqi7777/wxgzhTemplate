@@ -26,7 +26,7 @@ var app = new Koa()
 
 	//跨域配置
 	app.use(cors)
-
+app.use(require('koa-static')(__dirname+'/public'))
 
 app.use(wechat(config.wechat))
 
@@ -37,5 +37,5 @@ app.use(bodyparser({
 }))
 
 
-  app.listen(8001)
+  app.listen(8071)
   console.log('跑起来了')

@@ -20,10 +20,9 @@ router.get('/',async (x,next)=>{
 })
 router.get('/wx',async(x,next)=>{
   console.log(x.query,'获取code值-----')
-  x.status = 301;
-  x.redirect(`http://www.tsml520.cn:5000?code=success-----`)
-  //x.body = '123'
+
 })
+
 
 router.post('/data',(x,next)=>{
   console.log(x.request.body)
