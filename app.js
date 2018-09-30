@@ -34,7 +34,8 @@ app.use(wechat(config.wechat))
 
 app.use(router.routes(),router.allowedMethods())
 
-app.use(require('koa-static')(__dirname+'/public'))
+
+app.use(require('koa-static')(__dirname+'/dist'))
 app.use(bodyparser({
   enableTypes:['json', 'form', 'text']
 }))
