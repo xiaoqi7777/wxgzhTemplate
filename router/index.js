@@ -6,14 +6,14 @@ var config = require('../config')
 let router= new Router()
 let wechatApi = new Wechat(config.wechat)
 
-router.get('/',async (x,next)=>{
+router.get('/sdk',async (x,next)=>{
   let access = await wechatApi.fetchAccessToken()
   let data = JSON.parse(access)
   let access_token = data.access_token
   let ticketData = await wechatApi.fetchTicket(access_token)
   let ticket = JSON.parse(ticketData).ticket
   let url = x.href
-  // console.log('url',url,'ticket',ticket)
+  console.log('url',url,'ticket',ticket)
   var params = sign(ticket,url)
   // console.log('params',params)
   x.body = params
