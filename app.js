@@ -5,8 +5,9 @@ var config = require('./config')
 var reply = require('./wx/reply')
 var  router = require('./router/index')
 var cors = require('./router/cors')
+const path = require('path')
 const bodyparser = require('koa-bodyparser')  
-
+const static = require('koa-static')
 
 var app = new Koa()
 
@@ -29,13 +30,16 @@ var app = new Koa()
 	//跨域配置
 	app.use(cors)
 
+  console.log('访问地址',path.join( __dirname,  '/dist'))
+  app.use(static(
+    path.join( __dirname,  '/dist')
+  ))
 
 app.use(wechat(config.wechat))
 
 app.use(router.routes(),router.allowedMethods())
 
 
-app.use(require('koa-static')(__dirname+'/dist'))
 app.use(bodyparser({
   enableTypes:['json', 'form', 'text']
 }))
