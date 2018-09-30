@@ -23,8 +23,9 @@ module.exports = function(config){
       }else{
         if(this.url.indexOf('MP')>-1){
           this.body = 'DG9ftuBEo1b7YsjS'
-        }
-        else{
+        }else if(this.url.indexOf('index')>-1){
+          console.log('返回静态首页')
+        }else{
           this.body = 'wrong---'
         }
       }
