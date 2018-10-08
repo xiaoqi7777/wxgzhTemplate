@@ -29,20 +29,20 @@ var app = new Koa()
 
 	//跨域配置
 	app.use(cors)
-
-  console.log('访问地址',path.join( __dirname,  '/dist'))
-  app.use(static(
-    path.join( __dirname,  '/dist')
-  ))
+app.use(bodyparser({
+  enableTypes:['json', 'form', 'text']
+}))
+  
+app.use(static(
+  path.join( __dirname,  '/dist')
+))
 
 app.use(wechat(config.wechat))
 
 app.use(router.routes(),router.allowedMethods())
+console.log('访问地址',path.join( __dirname,  '/dist'))
 
 
-app.use(bodyparser({
-  enableTypes:['json', 'form', 'text']
-}))
 
 
   app.listen(8001)
