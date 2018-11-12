@@ -23,7 +23,6 @@ router.get('/sdk',async (x,next)=>{
 })
 router.get('/wx',async(x,next)=>{
   console.log(x.query,'获取code值-----')
-
 })
 
 
@@ -62,11 +61,4 @@ function _sign(noncestr, timestamp, ticket, url) {
   var str = data.sort().join('&')
   return sha1(str)
 }
-
-
-
-
-
-
-
 module.exports = router
