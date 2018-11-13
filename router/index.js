@@ -2,6 +2,9 @@ const Router = require('koa-router');
 var sha1 = require('sha1')
 let Wechat = require('../wechat/wechat')
 var config = require('../config')
+const crypto = require('crypto');
+const md5 = crypto.createHash('md5');
+// var result = md5.update('a').digest('hex').toUpperCase()
 
 let router= new Router()
 let wechatApi = new Wechat(config.wechat)
@@ -23,8 +26,25 @@ router.get('/sdk',async (x,next)=>{
 })
 router.get('/wx',async(x,next)=>{
   console.log(x.query,'获取code值-----')
+  x.body = 'wx'
 })
+router.get('/play',async(x,next)=>{
+    // let appid = 'wx3df629936bf31f75'
+    // let mch_id = '1511047841'
+    // 回调连接 http://tsml520.cn/
+    // 密钥 gmklNxpgLPCQrOxji2HzIThpAfiyIVx7
+  let   appid = 'wx3df629936bf31f75'  
+  let   mch_id = '10000100'
+  let  device_info = '1000'
+  let  body = 'test'
+  let nonce_str = 'ibuaiVcKdpRxkhJA'
+  let stringA = "appid=wx3df629936bf31f75&body=test&device_info=1000&mch_id=10000100&nonce_str=ibuaiVcKdpRxkhJA";
+  let stringSignTemp = stringA+"&key=036989030fec913af6365b7695ffa918"
 
+  var result = md5.update(stringSignTemp).digest('hex').toUpperCase()
+  console.log(result)
+
+})
 
 router.post('/data',(x,next)=>{
   console.log(x.request.body)
