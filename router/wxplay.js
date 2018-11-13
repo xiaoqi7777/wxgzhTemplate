@@ -38,6 +38,7 @@ let order = {
 }
 
 
+sign =  wxSign(order, key)
 
 /*
 xml用法
@@ -50,6 +51,7 @@ xml用法
 
 // 签名算法
 function wxSign(order, key) {
+  // console.log('支付金额',order.total_fee)
   //对参数进行排序  
   let sortedOrder = Object.keys(order).sort().reduce((total, valu) => {
     total[valu] = order[valu]
@@ -73,16 +75,66 @@ function wxSign(order, key) {
   // console.log('被转换成字符串',stringifiedOrder)
 
   let stringifiedOrderWithKey = `${stringifiedOrder}&key=${key}`
-  // console.log('带key的字符串',stringifiedOrderWithKey)
+  console.log('带key的字符串',stringifiedOrderWithKey)
   //计算签名
-  let sign = crypto.createHash('md5').update(stringifiedOrderWithKey).digest('hex').toUpperCase();
+  let sign = crypto.createHash('md5').update(stringifiedOrderWithKey.trim()).digest('hex').toUpperCase();
+  // console.log('sign',sign)
   return sign
+
 }
 
+router.post('/commonPay',async(x, next) => {
+  let data = x.request.body
+  order.total_fee = data.money
+  order.trade_type = 'JSAPI'
 
 
+  sign =  wxSign(order, key)
 
-router.get('/wx', async (x, next) => {
+  let xmlOrder = xmljs.js2xml({
+    xml: { 
+      ...order,
+      sign
+      }
+    },{
+      compact: true
+    })
+  let unifiedorderResponse  = await axios.post(unifiedorder, xmlOrder);
+let _prepay = xmljs.xml2js(unifiedorderResponse.data, {
+    compact: true,
+    cdataKey: 'value',
+    textKey:'value'
+  }) 
+  console.log('将获取的xml数据转换成js对象',_prepay)
+
+  //将获取的xml转换成js
+  let prepay  = Object.entries(_prepay.xml).reduce((total,[key,value])=>{
+      total[key] = value.value
+      return total
+    },{})
+    let prepay  = Object.entries(_prepay.xml).reduce((total,[key,value])=>{
+      total[key] = value.value
+      return total
+    },{})
+  
+console.log('调取支付微信返回的结果',prepay)
+  let prepay_id = prepay.prepay
+
+  let obj = {
+    appId:appid,
+    timeStamp: out_trade_no, //时间戳，自1970年以来的秒数
+    nonceStr: nonce_str, //随机串
+    package: prepay_id,
+    signType: "md5", //微信签名方式：
+    paySign: sign //微信签名
+  }
+  x.body = obj
+})
+
+
+router.post('/wx', async (x, next) => {
+  let data = x.request.body
+  order.total_fee = data.data
   //获取签名
   sign =  wxSign(order, key)
   //转换成 xml 格式
@@ -94,12 +146,12 @@ router.get('/wx', async (x, next) => {
     },{
       compact: true
     })
-  // console.log('xml',xmlOrder)
+  console.log('xml',xmlOrder)
 
   //请求统一下单接口 (2个参数 发送地址 xml格式的订单)
   let unifiedorderResponse  = await axios.post(unifiedorder, xmlOrder);
   //响应的 数据是一个xml格式的
-  console.log('统一下单影响',unifiedorderResponse)
+  //console.log('统一下单响应',unifiedorderResponse)
   
   let _prepay = xmljs.xml2js(unifiedorderResponse.data, {
     compact: true,
@@ -108,7 +160,50 @@ router.get('/wx', async (x, next) => {
   }) 
   console.log('将获取的xml数据转换成js对象',_prepay)
 
+  //将获取的xml转换成js
+  let prepay  = Object.entries(_prepay.xml).reduce((total,[key,value])=>{
+      total[key] = value.value
+      return total
+    },{})
+  
+console.log('调取支付微信返回的结果',prepay)
 
-  x.body = '123'
+  let code_url = prepay.code_url
+
+ const qrcodeUrl = await qrcode.toDataURL(code_url, {
+    width: 300
+  });
+
+  x.body = qrcodeUrl
+
+
+
+
+
+
+
+
+
+
+
+
+  // const prepay = Object.entries(_prepay.xml).reduce((memo, [key, value]) => {
+  //   memo[key]=value.value;
+  //   return memo;
+  // }, {});
+
+  // logger.info('prepay', prepay);
+  // const {
+  //   code_url
+  // } = prepay;
+  // const qrcodeUrl = await qrcode.toDataURL(code_url, {
+  //   width: 300
+  // });
+  // await ctx.render('checkout', {
+  //   qrcodeUrl
+  // });
+
+
+
 })
 module.exports = router
