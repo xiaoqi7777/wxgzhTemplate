@@ -21,6 +21,13 @@ var config = {
       data = JSON.stringify(data) 
       return util.writeFileAsync(wechat_sdk,data)
     },
+  },
+  wxpay:{
+    appid: 'wx3df629936bf31f75',
+    mch_id: '1511047841',
+    key: 'gmklNxpgLPCQrOxji2HzIThpAfiyIVx7 ',
+    notify_url: 'http://tsml520.cn/',
+    unifiedorder:'https://api.mch.weixin.qq.com/pay/unifiedorder'
   }
 }
 module.exports = config

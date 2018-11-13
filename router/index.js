@@ -16,7 +16,7 @@ router.get('/sdk',async (x,next)=>{
   let ticketData = await wechatApi.fetchTicket(access_token)
   let ticket = JSON.parse(ticketData).ticket
   let getUrl = x.href
-  let url = getUrl.split('/sdk')[0]
+  let url = getUrl.split('sdk')[0]
   //url 当前页面的地址 不含#及其后面的
   console.log('url',url,'ticket',ticket)
   var params = sign(ticket,url)

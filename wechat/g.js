@@ -26,7 +26,7 @@ module.exports = function(config){
         }else if(this.url.indexOf('index')>-1){
           console.log('返回静态首页')
         }else{
-          this.body = 'wrong---'
+          // this.body = 'wrong---'
         }
       }
     }else if(this.method === 'POST'){
