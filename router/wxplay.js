@@ -24,6 +24,13 @@ let detail = '商品详情'
 let trade_type = 'NATIVE'
 let product_id = '007'
 let out_trade_no = moment().local().format('YYYYMMDDhhmmss') //商户订单号
+let timeStamp = moment().unix() //时间戳
+
+/*
+JSAPI错误
+  商户订单号重复
+  商品描述和商户订单号这两个必须跟创建订单时候一样。
+*/
 
 let order = {
   appid,
@@ -34,7 +41,8 @@ let order = {
   product_id,
   notify_url,
   nonce_str,
-  trade_type
+  trade_type,
+  openid
 }
 
 
@@ -83,6 +91,17 @@ function wxSign(order, key) {
 
 }
 
+
+router.get('/getOpenId',async(x,next) => {
+  let code = x.query.code
+  let url = `https://api.weixin.qq.com/sns/oauth2/access_token?appid=${appid}&secret=${config.wechat.appSecret}&code=${code}&grant_type=authorization_code`
+  let getData = await axios.get(url)
+  console.log('code',code,'openid',getData.data.openid)
+  order.openid = getData.data.openid
+  x.body = getData.data.openid
+})
+
+
 router.post('/commonPay',async(x, next) => {
   let data = x.request.body
   order.total_fee = data.money
@@ -112,13 +131,19 @@ let _prepay = xmljs.xml2js(unifiedorderResponse.data, {
       total[key] = value.value
       return total
     },{})
-    let prepay  = Object.entries(_prepay.xml).reduce((total,[key,value])=>{
-      total[key] = value.value
-      return total
-    },{})
+//wx141333153744622bbb86f34d3058016527
   
 console.log('调取支付微信返回的结果',prepay)
-  let prepay_id = prepay.prepay
+
+  order = {
+    appId:appid,
+    timeStamp:time,
+    nonceStr:nonce_str,
+    package:`prepay_id=${prepay_id}`,
+    signType : 'md5'
+  }
+  sign = wxSign(order,key)
+  console.log('发给前端的签名',sign)
 
   let obj = {
     appId:appid,
