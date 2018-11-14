@@ -24,7 +24,7 @@ let detail = '商品详情'
 let trade_type = 'NATIVE'
 let product_id = '007'
 let out_trade_no = moment().local().format('YYYYMMDDhhmmss') //商户订单号
-let timeStamp = moment().unix() //时间戳
+let timeStamp = moment().unix().toString() //时间戳
 
 /*
 JSAPI错误
@@ -42,7 +42,6 @@ let order = {
   notify_url,
   nonce_str,
   trade_type,
-  openid
 }
 
 
@@ -131,23 +130,23 @@ let _prepay = xmljs.xml2js(unifiedorderResponse.data, {
       total[key] = value.value
       return total
     },{})
-//wx141333153744622bbb86f34d3058016527
-  
-console.log('调取支付微信返回的结果',prepay)
 
-  order = {
+  let prepay_id = prepay.prepay_id
+console.log('调取支付微信返回的结果',prepay)
+  let params;
+  params = {
     appId:appid,
-    timeStamp:time,
+    timeStamp:timeStamp,
     nonceStr:nonce_str,
     package:`prepay_id=${prepay_id}`,
     signType : 'md5'
   }
-  sign = wxSign(order,key)
+  sign = wxSign(params,key)
   console.log('发给前端的签名',sign)
 
   let obj = {
     appId:appid,
-    timeStamp: out_trade_no, //时间戳，自1970年以来的秒数
+    timeStamp: timeStamp, //时间戳，自1970年以来的秒数
     nonceStr: nonce_str, //随机串
     package: prepay_id,
     signType: "md5", //微信签名方式：
