@@ -128,6 +128,66 @@ router.post('/commonPay',async(x, next) => {
   x.body = obj
 })
 
+
+//解析 支付成功 获取返回的值 是一个XML
+function parseXML(req) {
+  return new Promise(function(resolve,reject){
+      let buffers = [];
+      req.on('data', function(data) {
+          buffers.push(data);
+      });
+      req.on('end', function() {
+          let ret = Buffer.concat(buffers);
+          resolve(ret.toString());
+      });
+  });
+}
+
+router.post('/getNotifyUrl',async(x,next)=>{
+  let body = await parseXML(x.req)
+  let data = await getRweBody(x.req,{
+    length : x.req.length,
+    limit : '1mb',
+    encoding : x.req.charset
+  })
+  console.log('返回的数据没有转换----',x)
+
+  let jsdata = xmljs.xml2js(body,{
+        compact: true,
+        cdataKey: 'value',
+        textKey:'value'
+  })
+  let payment = Object.entries(jsdata.xml).reduce((total,[key,value])=>{
+    total[key] = value['value']
+    return total
+  },{})
+  console.log('支付成功返回的数据',payment)
+  // const return_code = payment.return_code
+  const paymentSign = payment.sign
+  delete payment.sign
+  let key  = config.wxpay.key
+  let newSign = wxSign(payment,key)
+  console.log('新的签名',newSign)
+  console.log('支付传过来的的签名',paymentSign)
+
+  const return_code = newSign===paymentSign?'SUCCESS':'FAIL' 
+  const return_msg = newSign===paymentSign?'OK':'NO' 
+
+  const reply = {
+   xml:{
+    return_code,
+    return_msg
+   }
+  }
+  const ret = xmljs.js2xml(reply, {
+    compact: true
+  });
+  console.log('返回的微信的数据',ret)
+  x.body = ret
+
+})
+
+
 router.post('/wx', async (x, next) => {
   let data = x.request.body
   total_fee = order.total_fee = data.data
@@ -173,33 +233,6 @@ router.post('/wx', async (x, next) => {
     });
 
   x.body = qrcodeUrl
-
-  router.post('/getNotifyUrl',async(x,next)=>{
-    let body = await parseXML(x.req)
-
-    let jsdata = xmljs.xml2js(body,{
-          compact: true,
-          cdataKey: 'value',
-          textKey:'value'
-    })
-    console.log('支付成功返回的数据',data)
-  })
-
-
-
-  //解析 支付成功 获取返回的值 是一个XML
-  function parseXML(req) {
-    return new Promise(function(resolve,reject){
-        let buffers = [];
-        req.on('data', function(data) {
-            buffers.push(data);
-        });
-        req.on('end', function() {
-            let ret = Buffer.concat(buffers);
-            resolve(ret.toString());
-        });
-    });
-  }
 
 // async notify() {
 //   const {ctx,app} = this;
