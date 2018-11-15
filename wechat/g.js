@@ -1,6 +1,7 @@
 
 var sha1 = require('sha1')
 var Wechat = require('./wechat')
+
 var getRweBody = require('raw-body')
 
 
@@ -31,7 +32,7 @@ module.exports = function(config){
       }
     }else if(this.method === 'POST'){
       if(sha !== signature){
-        this.body = 'wrong---'
+        // this.body = 'wrong---'
       }else{
         var data = yield getRweBody(that.req,{
           length : that.length,
