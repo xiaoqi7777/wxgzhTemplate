@@ -64,21 +64,17 @@ if(sha === signature){
 
  */
 
-app.use(require('koa-static')(__dirname+'/public'))
+App.use(require('koa-static')(__dirname+'/public'))
 //koa-static 作用 静态目录
 //开启node服务后  域名+ index.html   可以直接访问public 下面的静态目录
 // ctx.query 获取get 请求方式 ?后面携带的参数 变成对象
 
-app.use(async (ctx, next) => {
-  console.log(`请求的URL${ctx.request.url}`)
-  console.log('response',ctx.query)
-  await next()
-})
-//路由配置
-router.get('/ss',(x,next)=>{
-  console.log('----gut')
-  x.body = '123'
-})
+//app.use(async (ctx, next) => {
+//  console.log(`请求的URL${ctx.request.url}`)
+//  console.log('response',ctx.query)
+//  await next()
+//})
+
 async function  getToken(){
   console.log('寄哪里了')
 let appID ='wx3df629936bf31f75'
@@ -89,6 +85,11 @@ console.log('--',data.data)
 }
 getToken()
 
+//路由配置
+router.get('/ss',(x,next)=>{
+  console.log('----gut')
+  x.body = '123'
+})
 router.get('/wx/msg', (ctx,next)=>{
   console.log('----微信发来请求--')
   let getData = ctx.query
@@ -126,4 +127,4 @@ app.use(router.routes(),router.allowedMethods())
 app.listen(8001,()=>{
   console.log('开启境外~~~')
 })
-// 建议不要在前端页面 启动
+// Ż�议不要在前端页面 启动

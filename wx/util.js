@@ -5,7 +5,6 @@ function readFile(_path,encoding='utf8'){
     return new Promise((resolve,reject)=>{
         fs.readFile(_path,encoding,(err,context)=>{
             console.log('err',err)
-            console.log('context',context)
             resolve(context)
         })
     })
@@ -14,6 +13,14 @@ function readFile(_path,encoding='utf8'){
 // readFile(pathAdress).then(data=>{
 //     console.log('===',data)
 // })
+// let time2h = '123'
+// let name = 'sg'
+// let jsonData = {
+//     "time":"time2h",
+//     "name":`"${name}"`,
+// }
+// jsonData = JSON.stringify(jsonData)
+// writeFile(pathAdress,jsonData)
 
 async function writeFile(_path,context){
   let a = await  fs.writeFile(_path,context,(err)=>{

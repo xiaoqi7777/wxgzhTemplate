@@ -13,7 +13,7 @@ const wx = require('./wx')
 wx.entryFn()
 
 
-//bodyparser post 接收参数 转换成对象   这个中间件要放前面
+// bodyparser post 接收参数 转换成对象   这个中间件要放前面
 app.use(bodyparser({
   enableTypes:['json', 'form', 'text']
 }))
